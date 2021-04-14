@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "news:lib"
+
+    - path: "./app/Main.hs"
+      component: "news:exe:news-exe"
+
+    - path: "./app/Paths_news.hs"
+      component: "news:exe:news-exe"
+
+    - path: "./test"
+      component: "news:test:news-test"
