@@ -1,0 +1,341 @@
+---
+openapi: 3.0.0
+
+info:
+  title: News API
+  description: Simple news server API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: Local testing server
+
+tags:
+  - name: admins
+    description: Calls for admins
+  - name: articles
+    description: Everything about articles
+  - name: authors
+    description: Manage information about authors
+  - name: categories
+    description: Manage categories
+  - name: tags
+    description: Manage article tags
+  - name: templates
+    description: Manage article templates
+  - name: users
+    description: Manage information about users
+  - name: comments
+    description: Manage article comments
+
+paths:
+  /getArticles:
+    get:
+      tags:
+        - articles
+      summary: Get a list of articles
+      operationId: get_articles
+      requestBody:
+        $ref: "#/components/requestBodies/GetArticlesBody"
+      responses:
+        "200":
+          description: Ok
+
+  /articles/{id}:
+    get:
+      tags:
+        - articles
+      summary: Get an article by id
+      parameters:
+        - name: id
+          in: path
+          description: Id of an article
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+        "400":
+          description: Invalid id value
+
+  /articles/search/{text}:
+    get:
+      tags:
+        - articles
+      summary: Find articles containing specified substring in title, author or content
+      parameters:
+        - name: text
+          in: path
+          description: A substring to search for
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          description: Sort articles by specified field
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            enum:
+              - date_asc
+              - date_desc
+              - author_asc
+              - author_desc
+              - category_asc
+              - category_desc
+              - photos_qty_asc
+              - photos_qty_desc
+      responses:
+        "200":
+          description: Ok
+        "404":
+          description: No mathing articles
+
+  /authors/{id}:
+    get:
+      tags:
+        - authors
+        - admins
+      summary: Retrieve information about certain author
+      parameters:
+        - name: id
+          in: path
+          description: Author id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+        "404":
+          description: No such author or not enough access rights
+
+  /authors/create:
+    post:
+      tags:
+        - authors
+        - admins
+      summary: Make existing User become an Author
+      requestBody:
+        $ref: "#/components/requestBodies/AuthorBody"
+      responses:
+        "200":
+          description: Ok
+        "404":
+          description: Not enough access rights
+
+components:
+  schemas:
+    Article:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        creation_date:
+          type: string
+          format: date
+        author:
+          $ref: "#/components/schemas/Author"
+        category_id:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tag"
+        text:
+          type: string
+        main_photo:
+          $ref: "#/components/schemas/Photo"
+        secondary_photos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Photo"
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+        templates:
+          type: array
+          items:
+            $ref: "#/components/schemas/Template"
+
+    Author:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        bio:
+          type: string
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        parent_id:
+          type: integer
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        article_id:
+          type: integer
+        text:
+          type: string
+
+    Template:
+      type: object
+      properties:
+        title:
+          type: string
+        creation_date:
+          type: string
+          format: date
+        author:
+          $ref: "#/components/schemas/Author"
+        category_id:
+          type: integer
+        tags:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tag"
+        text:
+          type: string
+        main_photo:
+          $ref: "#/components/schemas/Photo"
+        secondary_photos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Photo"
+        comments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Comment"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        surname:
+          type: string
+        photo:
+          $ref: "#/components/schemas/Photo"
+        login:
+          type: string
+        password:
+          type: string
+        creation_date:
+          type: string
+          format: date
+        is_admin:
+          type: boolean
+
+    Photo:
+      type: object
+      properties:
+        id:
+          type: integer
+        link:
+          type: string
+
+  requestBodies:
+    GetArticlesBody:
+      description: |
+        getArticles request body. 
+        Only one *tag*-related property can be present at a time.
+        Only one *created*-related property can be present at a time.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              page:
+                description: Number of page to show (20 articles per page, defaults to 1 if not specified)
+                type: integer
+              tag:
+                description: Filter articles by a specified tag
+                type: integer
+              tags_any:
+                description: Fetch articles containing at least one of the specified tags
+                type: array
+                items:
+                  type: integer
+              tags_all:
+                description: Fetch articles containing all of the specified tags
+                type: array
+                items:
+                  type: integer
+              created_at:
+                description: Fetch articles created at specified date
+                type: string
+                format: date
+              created_before:
+                description: Fetch articles created before specified date
+                type: string
+                format: date
+              created_after:
+                description: Fetch articles created after specified date
+                type: string
+                format: date
+              author:
+                description: Fetch articles of a certain author
+                type: string
+              category:
+                description: Fetch articles from a specified category
+                type: integer
+              title:
+                description: Fetch article with a certain title (can be a substring)
+                type: string
+              content:
+                description: Fetch article with a certain content (can be a substring)
+                type: string
+              sort_by:
+                description: Sort articles by specified field
+                type: string
+                enum:
+                  - date
+                  - author
+                  - category
+                  - photos_quantity
+              order:
+                description: Specify sorting oreder. Defaults to ascending if not specified.
+                type: string
+                enum:
+                  - asc
+                  - desc
+
+    AuthorBody:
+      description: A JSON object containing author information
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Author"
+      required: true
