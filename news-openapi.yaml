@@ -2,619 +2,911 @@
 openapi: 3.0.0
 
 info:
-  title: News API
-  description: Simple news server API
-  version: 1.0.0
+    title: News API
+    description: Simple news server API
+    version: 1.0.0
 
 servers:
-  - url: http://localhost:8000
-    description: Local testing server
+    - url: http://localhost:8000
+      description: Local testing server
 
 tags:
-  - name: admins
-    description: Calls for admins
-  - name: articles
-    description: Everything about articles
-  - name: authors
-    description: Manage information about authors
-  - name: categories
-    description: Manage categories
-  - name: tags
-    description: Manage article tags
-  - name: templates
-    description: Manage article templates
-  - name: users
-    description: Manage information about users
-  - name: comments
-    description: Manage article comments
+    - name: admins
+      description: Calls for admins
+    - name: articles
+      description: Everything about articles
+    - name: authors
+      description: Manage information about authors
+    - name: categories
+      description: Manage categories
+    - name: tags
+      description: Manage article tags
+    - name: templates
+      description: Manage article templates
+    - name: users
+      description: Manage information about users
+    - name: comments
+      description: Manage article comments
 
 paths:
-  /articles:
-    get:
-      tags:
-        - articles
-      summary: Get a list of articles
-      operationId: get_articles
-      parameters:
-        - name: page
-          in: query
-          description: Number of page to show (20 articles per page, defaults to 1 if not specified)
-          required: false
-          schema:
-            type: integer
+    /articles:
+        get:
+            tags:
+                - articles
+            summary: Get a list of articles
+            parameters:
+                - name: page
+                  in: query
+                  description: Number of page to show (20 articles per page, defaults to 1 if not specified)
+                  required: false
+                  schema:
+                      type: integer
 
-        - name: tag
-          in: query
-          description: Filter articles by a specified tag
-          required: false
-          schema:
-            type: integer
+                - name: tag
+                  in: query
+                  description: Filter articles by a specified tag
+                  required: false
+                  schema:
+                      type: integer
 
-        - name: tags_any
-          in: query
-          description: Fetch articles containing at least one of the specified tags
-          required: false
-          schema:
-            type: array
-            items:
-              type: integer
+                - name: tags_any
+                  in: query
+                  description: Fetch articles containing at least one of the specified tags
+                  required: false
+                  schema:
+                      type: array
+                      items:
+                          type: integer
 
-        - name: tags_all
-          in: query
-          description: Fetch articles containing all of the specified tags
-          required: false
-          schema:
-            type: array
-            items:
-              type: integer
+                - name: tags_all
+                  in: query
+                  description: Fetch articles containing all of the specified tags
+                  required: false
+                  schema:
+                      type: array
+                      items:
+                          type: integer
 
-        - name: created_at
-          in: query
-          description: Fetch articles created at specified date
-          required: false
-          schema:
-            type: string
-            format: date
+                - name: created_at
+                  in: query
+                  description: Fetch articles created at specified date
+                  required: false
+                  schema:
+                      type: string
+                      format: date
 
-        - name: created_before
-          in: query
-          description: Fetch articles created before specified date
-          required: false
-          schema:
-            type: string
-            format: date
+                - name: created_before
+                  in: query
+                  description: Fetch articles created before specified date
+                  required: false
+                  schema:
+                      type: string
+                      format: date
 
-        - name: created_after
-          in: query
-          description: Fetch articles created after specified date
-          required: false
-          schema:
-            type: string
-            format: date
+                - name: created_after
+                  in: query
+                  description: Fetch articles created after specified date
+                  required: false
+                  schema:
+                      type: string
+                      format: date
 
-        - name: author
-          in: query
-          description: Fetch articles of a certain author
-          required: false
-          schema:
-            type: string
+                - name: author
+                  in: query
+                  description: Fetch articles of a certain author
+                  required: false
+                  schema:
+                      type: string
 
-        - name: category
-          in: query
-          description: Fetch articles from a specified category
-          required: false
-          schema:
-            type: integer
+                - name: category
+                  in: query
+                  description: Fetch articles from a specified category
+                  required: false
+                  schema:
+                      type: integer
 
-        - name: title
-          in: query
-          description: Fetch article with a certain title (can be a substring)
-          required: false
-          schema:
-            type: string
+                - name: title
+                  in: query
+                  description: Fetch article with a certain title (can be a substring)
+                  required: false
+                  schema:
+                      type: string
 
-        - name: content
-          in: query
-          description: Fetch article with a certain content (can be a substring)
-          required: false
-          schema:
-            type: string
+                - name: content
+                  in: query
+                  description: Fetch article with a certain content (can be a substring)
+                  required: false
+                  schema:
+                      type: string
 
-        - name: sort_by
-          in: query
-          description: Sort articles by specified field
-          required: false
-          schema:
-            type: string
-            enum: [date, author, photos_quantity]
+                - name: sort_by
+                  in: query
+                  description: Sort articles by specified field
+                  required: false
+                  schema:
+                      type: string
+                      enum: [date, author, photos_quantity]
 
-        - name: order_by
-          in: query
-          description: Specify sorting direction
-          required: false
-          schema:
-            type: string
-            enum: [asc, desc]
+                - name: order_by
+                  in: query
+                  description: Specify sorting direction
+                  required: false
+                  schema:
+                      type: string
+                      enum: [asc, desc]
 
-        - name: search_by
-          in: query
-          description: Find articles containing specified substring in title, author or content
-          required: false
-          schema:
-            type: string
+                - name: search_by
+                  in: query
+                  description: Find articles containing specified substring in title, author or content
+                  required: false
+                  schema:
+                      type: string
 
-      responses:
-        "200":
-          description: Ok
-        # TODO: Response content
-        # TODO: Authorization
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Article"
+                # TODO: Authorization
 
-  /articles/{id}:
-    get:
-      tags:
-        - articles
-      summary: Get an article by id
-      parameters:
-        - name: id
-          in: path
-          description: Id of an article
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
-        "400":
-          description: Invalid id value
+    /articles/templates:
+        get:
+            tags:
+                - articles
+                - templates
+                - authors
+            summary: Get a list of all your templates
+            parameters:
+                - name: page
+                  in: query
+                  description: Number of page to show (default = 1, 20 templates per page)
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Template"
 
-  /authors/{id}:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    get:
-      tags:
-        - authors
-        - admins
-      summary: Retrieve information about certain author
-      parameters:
-        - name: id
-          in: path
-          description: Author id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
-        "404":
-          description: No such author or not enough access rights
+        post:
+            tags:
+                - articles
+                - templates
+                - authors
+            summary: Create new unassociated template
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Template"
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Template"
 
-  /authors/create:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    post:
-      tags:
-        - authors
-        - admins
-      summary: Make existing User become an Author
-      parameters:
-        - name: user_id
-          in: query
-          description: Id of a user which you want to make an author
-          required: true
-          schema:
-            type: integer
-        - name: bio
-          in: query
-          description: Authors's biography
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Ok
-        "404":
-          description: Not enough access rights or not found a user by id
+    /articles/templates/{template_id}:
+        get:
+            tags:
+                - articles
+                - templates
+                - authors
+            summary: Retrieve info about template
+            parameters:
+                - name: template_id
+                  in: path
+                  description: Template id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Template"
+        put:
+            tags:
+                - articles
+                - templates
+                - authors
+            summary: Edit existing template
+            parameters:
+                - name: template_id
+                  in: path
+                  description: Template id
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Template"
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Template"
+        delete:
+            tags:
+                - articles
+                - templates
+                - authors
+            summary: Delete template
+            parameters:
+                - name: template_id
+                  in: path
+                  description: Template id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Template"
 
-  /authors/{id}/edit:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    post:
-      tags:
-        - authors
-        - admins
-      summary: Update Author's information
-      parameters:
-        - name: id
-          in: path
-          description: Author id
-          required: true
-          schema:
-            type: integer
-        - name: bio
-          in: query
-          description: Author's new biography
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Ok
-        "404":
-          description: Not enough access rights or not found a user by id
+    /articles/templates/{template_id}/publish: # Publish this template
+        patch:
+            tags:
+                - articles
+                - templates
+                - authors
+            summary: Publish this template
+            parameters:
+                - name: template_id
+                  in: path
+                  description: Template id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Article"
 
-  /authors/{id}/delete:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    post:
-      tags:
-        - authors
-        - admins
-      summary: Delete Author (actually makes Author become an usual user)
-      parameters:
-        - name: id
-          in: path
-          description: Author id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
-        "404":
-          description: Not enough access rights or not found a user by id
+    /articles/{id}/templates: # Get list of all templates associated with this article
+        get:
+            tags:
+                - articles
+                - templates
+                - authors
+            summary: Retrieve all templates associated with this article
+            parameters:
+                - name: page
+                  in: query
+                  description: Page
+                  required: false
+                  schema:
+                      type: integer
+                - name: id
+                  in: path
+                  description: Article id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Template"
 
-  /categories/{id}:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    get:
-      tags:
-        - categories
-      summary: Retrieve category info
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Category id
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+    /articles/{id}:
+        get:
+            tags:
+                - articles
+            summary: Get an article by id
+            parameters:
+                - name: id
+                  in: path
+                  description: Id of an article
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Article"
+                "400":
+                    description: Invalid id value
 
-  /categories/create:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    # TODO: return id of created tag
-    post:
-      tags:
-        - categories
-        - admins
-      summary: Create new category
-      parameters:
-        - name: name
-          in: query
-          description: Category name
-          required: true
-          schema:
-            type: string
-        - name: parent_id
-          in: query
-          description: Id of parent category
-          required: false
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+    /articles/{id}/comments:
+        get:
+            tags:
+                - articles
+                - comments
+            summary: Get a list of comments associated with a given article
+            parameters:
+                - name: id
+                  in: path
+                  description: Id of an article
+                  required: true
+                  schema:
+                      type: integer
+                - name: page
+                  in: query
+                  description: Page
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Comment"
 
-  /category/{id}/edit:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    post:
-      tags:
-        - categories
-        - admins
-      summary: Update info about existing category
-      parameters:
-        - name: id
-          in: path
-          description: Category id
-          required: true
-          schema:
-            type: integer
-        - name: name
-          in: query
-          description: New name
-          required: true
-          schema:
-            type: string
-        - name: parent_id
-          in: query
-          description: New id of parent category.
-          required: false
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+        post:
+            tags:
+                - articles
+                - comments
+            summary: Create a new comment
+            parameters:
+                - name: id
+                  in: path
+                  description: Id of an article
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    text/plain:
+                        schema:
+                            type: string
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Comment"
 
-  /categories/{id}/delete:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    post:
-      tags:
-        - categories
-        - admins
-      summary: Delete category
-      parameters:
-        - name: id
-          in: path
-          description: Category id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+    /articles/{id}/comments/{comment_id}:
+        delete:
+            tags:
+                - articles
+                - comments
+            summary: Delete comment
+            parameters:
+                - name: id
+                  in: path
+                  description: Id of an article
+                  required: true
+                  schema:
+                      type: integer
+                - name: comment_id
+                  in: path
+                  description: Comment id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Comment"
 
-  /tags/{id}:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    get:
-      tags:
-        - tags
-      summary: Retrieve tag info
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Tag id
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+    /authors:
+        # TODO: ADD AUTHENTICATION METHODS
+        post:
+            tags:
+                - authors
+                - admins
+            summary: Make existing User become an Author
+            parameters:
+                - name: user_id
+                  in: query
+                  description: Id of a user which you want to make an author
+                  required: true
+                  schema:
+                      type: integer
+                - name: bio
+                  in: query
+                  description: Authors's biography
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Author"
+                "404":
+                    description: Not enough access rights or not found a user by id
 
-  /tags/create:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    # TODO: return id of created tag
-    post:
-      tags:
-        - tags
-        - admins
-      summary: Create new tag
-      parameters:
-        - name: name
-          in: query
-          description: Tag name
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Ok
+    /authors/{id}:
+        # TODO: ADD AUTHENTICATION METHODS
+        get:
+            tags:
+                - authors
+                - admins
+            summary: Retrieve information about certain author
+            parameters:
+                - name: id
+                  in: path
+                  description: Author id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Author"
+                "404":
+                    description: No such author or not enough access rights
 
-  /tags/{id}/edit:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    post:
-      tags:
-        - tags
-        - admins
-      summary: Update info about existing tag
-      parameters:
-        - name: id
-          in: path
-          description: Tag id
-          required: true
-          schema:
-            type: integer
-        - name: name
-          in: query
-          description: Tag's new name
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Ok
+        # TODO: ADD AUTHENTICATION METHODS
+        put:
+            tags:
+                - authors
+                - admins
+            summary: Update Author's information
+            parameters:
+                - name: id
+                  in: path
+                  description: Author id
+                  required: true
+                  schema:
+                      type: integer
+                - name: bio
+                  in: query
+                  description: Author's new biography
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Author"
+                "404":
+                    description: Not enough access rights or not found a user by id
 
-  /tags/{id}/delete:
-    # TODO: ADD AUTHENTICATION METHODS
-    # TODO: resp content
-    post:
-      tags:
-        - tags
-        - admins
-      summary: Delete tag
-      parameters:
-        - name: id
-          in: path
-          description: Tag id
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        delete:
+            tags:
+                - authors
+                - admins
+            summary: Delete Author (actually makes Author become an usual user)
+            parameters:
+                - name: id
+                  in: path
+                  description: Author id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+                "404":
+                    description: Not enough access rights or not found a user by id
 
-  /templates/{id}:
-    get:
-      tags:
-        - templates
-        - authors
-      summary: Get a template by id
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Template id
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+    /categories:
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        # TODO: return id of created tag
+        post:
+            tags:
+                - categories
+                - admins
+            summary: Create new category
+            parameters:
+                - name: name
+                  in: query
+                  description: Category name
+                  required: true
+                  schema:
+                      type: string
+                - name: parent_id
+                  in: query
+                  description: Id of parent category
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
 
-  /templates/{id}/create:
-    get:
-      tags:
-        - templates
-        - authors
-      summary: Get a template by id
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Template id
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Ok
+    /categories/{id}:
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        get:
+            tags:
+                - categories
+            summary: Retrieve category info
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Category id
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
 
-  /templates/{id}/edit:
-  /templates/{id}/delete:
-  /templates/{id}/publish:
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        put:
+            tags:
+                - categories
+                - admins
+            summary: Update info about existing category
+            parameters:
+                - name: id
+                  in: path
+                  description: Category id
+                  required: true
+                  schema:
+                      type: integer
+                - name: name
+                  in: query
+                  description: New name
+                  required: true
+                  schema:
+                      type: string
+                - name: parent_id
+                  in: query
+                  description: New id of parent category.
+                  required: false
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        delete:
+            tags:
+                - categories
+                - admins
+            summary: Delete category
+            parameters:
+                - name: id
+                  in: path
+                  description: Category id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+
+    /tags:
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        # TODO: return id of created tag
+        post:
+            tags:
+                - tags
+                - admins
+            summary: Create new tag
+            parameters:
+                - name: name
+                  in: query
+                  description: Tag name
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Ok
+
+    /tags/{id}:
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        get:
+            tags:
+                - tags
+            summary: Retrieve tag info
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Tag id
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        put:
+            tags:
+                - tags
+                - admins
+            summary: Update info about existing tag
+            parameters:
+                - name: id
+                  in: path
+                  description: Tag id
+                  required: true
+                  schema:
+                      type: integer
+                - name: name
+                  in: query
+                  description: Tag's new name
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "200":
+                    description: Ok
+
+        # TODO: ADD AUTHENTICATION METHODS
+        # TODO: resp content
+        delete:
+            tags:
+                - tags
+                - admins
+            summary: Delete tag
+            parameters:
+                - name: id
+                  in: path
+                  description: Tag id
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+
+    /templates/{id}:
+        get:
+            tags:
+                - templates
+                - authors
+            summary: Get a template by id
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Template id
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+
+    /templates/{id}/create:
+        get:
+            tags:
+                - templates
+                - authors
+            summary: Get a template by id
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  description: Template id
+                  schema:
+                      type: integer
+            responses:
+                "200":
+                    description: Ok
+
+    /users:
+        get:
+            tags:
+                - users
+            summary: Retrieve info about yourself
+            responses:
+                "200":
+                    description: Ok
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+        post:
+            tags:
+                - users
+            summary: Create new user
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/User"
+            responses:
+                "200":
+                    description: Ok
+
+    /users/{id}:
+        delete:
+            tags:
+                - users
+                - admins
+            summary: Delete user
+            responses:
+                "200":
+                    description: Ok
 
 components:
-  schemas:
-    Article:
-      type: object
-      properties:
-        id:
-          type: integer
-        title:
-          type: string
-        creation_date:
-          type: string
-          format: date
-        author:
-          $ref: "#/components/schemas/Author"
-        category_id:
-          type: integer
-        tags:
-          type: array
-          items:
-            $ref: "#/components/schemas/Tag"
-        text:
-          type: string
-        main_photo:
-          $ref: "#/components/schemas/Photo"
-        secondary_photos:
-          type: array
-          items:
-            $ref: "#/components/schemas/Photo"
-        comments:
-          type: array
-          items:
-            $ref: "#/components/schemas/Comment"
-        templates:
-          type: array
-          items:
-            $ref: "#/components/schemas/Template"
+    schemas:
+        Article:
+            type: object
+            properties:
+                id:
+                    type: integer
+                title:
+                    type: string
+                creation_date:
+                    type: string
+                    format: date
+                author:
+                    $ref: "#/components/schemas/Author"
+                category_id:
+                    type: integer
+                tags:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Tag"
+                text:
+                    type: string
+                main_photo:
+                    $ref: "#/components/schemas/Photo"
+                secondary_photos:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Photo"
+                comments:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Comment"
+                templates:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Template"
 
-    Author:
-      type: object
-      properties:
-        user_id:
-          type: integer
-        bio:
-          type: string
+        Author:
+            type: object
+            properties:
+                user_id:
+                    type: integer
+                bio:
+                    type: string
 
-    Category:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        parent_id:
-          type: integer
+        Category:
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+                parent_id:
+                    type: integer
 
-    Tag:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
+        Tag:
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
 
-    Comment:
-      type: object
-      properties:
-        id:
-          type: integer
-        user_id:
-          type: integer
-        article_id:
-          type: integer
-        text:
-          type: string
+        Comment:
+            type: object
+            properties:
+                id:
+                    type: integer
+                user_id:
+                    type: integer
+                article_id:
+                    type: integer
+                text:
+                    type: string
 
-    Template:
-      type: object
-      properties:
-        title:
-          type: string
-        creation_date:
-          type: string
-          format: date
-        author:
-          $ref: "#/components/schemas/Author"
-        category_id:
-          type: integer
-        tags:
-          type: array
-          items:
-            $ref: "#/components/schemas/Tag"
-        text:
-          type: string
-        main_photo:
-          $ref: "#/components/schemas/Photo"
-        secondary_photos:
-          type: array
-          items:
-            $ref: "#/components/schemas/Photo"
-        comments:
-          type: array
-          items:
-            $ref: "#/components/schemas/Comment"
+        Template:
+            type: object
+            properties:
+                title:
+                    type: string
+                creation_date:
+                    type: string
+                    format: date
+                author:
+                    $ref: "#/components/schemas/Author"
+                category_id:
+                    type: integer
+                tags:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Tag"
+                text:
+                    type: string
+                main_photo:
+                    $ref: "#/components/schemas/Photo"
+                secondary_photos:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Photo"
+                comments:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Comment"
 
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        surname:
-          type: string
-        photo:
-          $ref: "#/components/schemas/Photo"
-        login:
-          type: string
-        password:
-          type: string
-        creation_date:
-          type: string
-          format: date
-        is_admin:
-          type: boolean
+        User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                name:
+                    type: string
+                surname:
+                    type: string
+                photo:
+                    $ref: "#/components/schemas/Photo"
+                login:
+                    type: string
+                password:
+                    type: string
+                creation_date:
+                    type: string
+                    format: date
+                is_admin:
+                    type: boolean
 
-    Photo:
-      type: object
-      properties:
-        id:
-          type: integer
-        link:
-          type: string
+        Photo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                link:
+                    type: string
 
-  requestBodies:
-    AuthorBody:
-      description: A JSON object containing author information
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Author"
-      required: true
+    requestBodies:
+        AuthorBody:
+            description: A JSON object containing author information
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Author"
+            required: true
