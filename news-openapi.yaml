@@ -29,17 +29,125 @@ tags:
     description: Manage article comments
 
 paths:
-  /getArticles:
+  /articles:
     get:
       tags:
         - articles
       summary: Get a list of articles
       operationId: get_articles
-      requestBody:
-        $ref: "#/components/requestBodies/GetArticlesBody"
+      parameters:
+        - name: page
+          in: query
+          description: Number of page to show (20 articles per page, defaults to 1 if not specified)
+          required: false
+          schema:
+            type: integer
+
+        - name: tag
+          in: query
+          description: Filter articles by a specified tag
+          required: false
+          schema:
+            type: integer
+
+        - name: tags_any
+          in: query
+          description: Fetch articles containing at least one of the specified tags
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+
+        - name: tags_all
+          in: query
+          description: Fetch articles containing all of the specified tags
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+
+        - name: created_at
+          in: query
+          description: Fetch articles created at specified date
+          required: false
+          schema:
+            type: string
+            format: date
+
+        - name: created_before
+          in: query
+          description: Fetch articles created before specified date
+          required: false
+          schema:
+            type: string
+            format: date
+
+        - name: created_after
+          in: query
+          description: Fetch articles created after specified date
+          required: false
+          schema:
+            type: string
+            format: date
+
+        - name: author
+          in: query
+          description: Fetch articles of a certain author
+          required: false
+          schema:
+            type: string
+
+        - name: category
+          in: query
+          description: Fetch articles from a specified category
+          required: false
+          schema:
+            type: integer
+
+        - name: title
+          in: query
+          description: Fetch article with a certain title (can be a substring)
+          required: false
+          schema:
+            type: string
+
+        - name: content
+          in: query
+          description: Fetch article with a certain content (can be a substring)
+          required: false
+          schema:
+            type: string
+
+        - name: sort_by
+          in: query
+          description: Sort articles by specified field
+          required: false
+          schema:
+            type: string
+            enum: [date, author, photos_quantity]
+
+        - name: order_by
+          in: query
+          description: Specify sorting direction
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+
+        - name: search_by
+          in: query
+          description: Find articles containing specified substring in title, author or content
+          required: false
+          schema:
+            type: string
+
       responses:
         "200":
           description: Ok
+        # TODO: Response content
+        # TODO: Authorization
 
   /articles/{id}:
     get:
@@ -51,8 +159,6 @@ paths:
           in: path
           description: Id of an article
           required: true
-          style: simple
-          explode: false
           schema:
             type: integer
       responses:
@@ -61,44 +167,9 @@ paths:
         "400":
           description: Invalid id value
 
-  /articles/search/{text}:
-    get:
-      tags:
-        - articles
-      summary: Find articles containing specified substring in title, author or content
-      parameters:
-        - name: text
-          in: path
-          description: A substring to search for
-          required: true
-          style: simple
-          explode: false
-          schema:
-            type: string
-        - name: sort_by
-          in: query
-          description: Sort articles by specified field
-          required: false
-          style: form
-          explode: true
-          schema:
-            type: string
-            enum:
-              - date_asc
-              - date_desc
-              - author_asc
-              - author_desc
-              - category_asc
-              - category_desc
-              - photos_qty_asc
-              - photos_qty_desc
-      responses:
-        "200":
-          description: Ok
-        "404":
-          description: No mathing articles
-
   /authors/{id}:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
     get:
       tags:
         - authors
@@ -109,8 +180,6 @@ paths:
           in: path
           description: Author id
           required: true
-          style: simple
-          explode: false
           schema:
             type: integer
       responses:
@@ -120,18 +189,293 @@ paths:
           description: No such author or not enough access rights
 
   /authors/create:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
     post:
       tags:
         - authors
         - admins
       summary: Make existing User become an Author
-      requestBody:
-        $ref: "#/components/requestBodies/AuthorBody"
+      parameters:
+        - name: user_id
+          in: query
+          description: Id of a user which you want to make an author
+          required: true
+          schema:
+            type: integer
+        - name: bio
+          in: query
+          description: Authors's biography
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Ok
         "404":
-          description: Not enough access rights
+          description: Not enough access rights or not found a user by id
+
+  /authors/{id}/edit:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    post:
+      tags:
+        - authors
+        - admins
+      summary: Update Author's information
+      parameters:
+        - name: id
+          in: path
+          description: Author id
+          required: true
+          schema:
+            type: integer
+        - name: bio
+          in: query
+          description: Author's new biography
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+        "404":
+          description: Not enough access rights or not found a user by id
+
+  /authors/{id}/delete:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    post:
+      tags:
+        - authors
+        - admins
+      summary: Delete Author (actually makes Author become an usual user)
+      parameters:
+        - name: id
+          in: path
+          description: Author id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+        "404":
+          description: Not enough access rights or not found a user by id
+
+  /categories/{id}:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    get:
+      tags:
+        - categories
+      summary: Retrieve category info
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Category id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /categories/create:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    # TODO: return id of created tag
+    post:
+      tags:
+        - categories
+        - admins
+      summary: Create new category
+      parameters:
+        - name: name
+          in: query
+          description: Category name
+          required: true
+          schema:
+            type: string
+        - name: parent_id
+          in: query
+          description: Id of parent category
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /category/{id}/edit:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    post:
+      tags:
+        - categories
+        - admins
+      summary: Update info about existing category
+      parameters:
+        - name: id
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: New name
+          required: true
+          schema:
+            type: string
+        - name: parent_id
+          in: query
+          description: New id of parent category.
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /categories/{id}/delete:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    post:
+      tags:
+        - categories
+        - admins
+      summary: Delete category
+      parameters:
+        - name: id
+          in: path
+          description: Category id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /tags/{id}:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    get:
+      tags:
+        - tags
+      summary: Retrieve tag info
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Tag id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /tags/create:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    # TODO: return id of created tag
+    post:
+      tags:
+        - tags
+        - admins
+      summary: Create new tag
+      parameters:
+        - name: name
+          in: query
+          description: Tag name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+
+  /tags/{id}/edit:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    post:
+      tags:
+        - tags
+        - admins
+      summary: Update info about existing tag
+      parameters:
+        - name: id
+          in: path
+          description: Tag id
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: Tag's new name
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ok
+
+  /tags/{id}/delete:
+    # TODO: ADD AUTHENTICATION METHODS
+    # TODO: resp content
+    post:
+      tags:
+        - tags
+        - admins
+      summary: Delete tag
+      parameters:
+        - name: id
+          in: path
+          description: Tag id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /templates/{id}:
+    get:
+      tags:
+        - templates
+        - authors
+      summary: Get a template by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Template id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /templates/{id}/create:
+    get:
+      tags:
+        - templates
+        - authors
+      summary: Get a template by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Template id
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Ok
+
+  /templates/{id}/edit:
+  /templates/{id}/delete:
+  /templates/{id}/publish:
 
 components:
   schemas:
@@ -267,71 +611,6 @@ components:
           type: string
 
   requestBodies:
-    GetArticlesBody:
-      description: |
-        getArticles request body. 
-        Only one *tag*-related property can be present at a time.
-        Only one *created*-related property can be present at a time.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              page:
-                description: Number of page to show (20 articles per page, defaults to 1 if not specified)
-                type: integer
-              tag:
-                description: Filter articles by a specified tag
-                type: integer
-              tags_any:
-                description: Fetch articles containing at least one of the specified tags
-                type: array
-                items:
-                  type: integer
-              tags_all:
-                description: Fetch articles containing all of the specified tags
-                type: array
-                items:
-                  type: integer
-              created_at:
-                description: Fetch articles created at specified date
-                type: string
-                format: date
-              created_before:
-                description: Fetch articles created before specified date
-                type: string
-                format: date
-              created_after:
-                description: Fetch articles created after specified date
-                type: string
-                format: date
-              author:
-                description: Fetch articles of a certain author
-                type: string
-              category:
-                description: Fetch articles from a specified category
-                type: integer
-              title:
-                description: Fetch article with a certain title (can be a substring)
-                type: string
-              content:
-                description: Fetch article with a certain content (can be a substring)
-                type: string
-              sort_by:
-                description: Sort articles by specified field
-                type: string
-                enum:
-                  - date
-                  - author
-                  - category
-                  - photos_quantity
-              order:
-                description: Specify sorting oreder. Defaults to ascending if not specified.
-                type: string
-                enum:
-                  - asc
-                  - desc
-
     AuthorBody:
       description: A JSON object containing author information
       content:
