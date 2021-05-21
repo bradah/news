@@ -765,6 +765,13 @@ paths:
                 - users
                 - admins
             summary: Delete user
+            parameters:
+                - name: id
+                  in: path
+                  description: User id
+                  required: true
+                  schema:
+                      type: integer
             responses:
                 "200":
                     description: Ok
