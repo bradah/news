@@ -34,6 +34,7 @@ paths:
             tags:
                 - articles
             summary: Get a list of articles
+            operationId: getArticles
             parameters:
                 - name: page
                   in: query
@@ -917,3 +918,9 @@ components:
                     schema:
                         $ref: "#/components/schemas/Author"
             required: true
+
+    securitySchemes:
+        TokenAuth:
+            type: apiKey
+            in: query
+            name: token

@@ -26,8 +26,13 @@ dependencies:
   - time
   - postgresql-simple
   - wai
+  - wai-extra
   - http-types
   - warp
+  - mtl
+  - aeson
+  - containers
+  - stm
 
 default-extensions:
   - OverloadedStrings

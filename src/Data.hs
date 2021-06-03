@@ -4,19 +4,14 @@ import           Data.Text
 import           Data.Time.Calendar
 
 data User = User
-    { user'id            :: Int
-    , user'name          :: Text
-    , user'surname       :: Text
-    , user'photo         :: Photo
-    , user'login         :: Text
-    , user'password      :: Text
-    , user'creation_date :: Day
-    , user'is_admin      :: Bool
-    } deriving (Show)
-
-data Photo = Photo
-    { photo'id   :: Int
-    , photo'link :: Text
+    { user'id         :: Int
+    , user'first_name :: Text
+    , user'last_name  :: Text
+    , user'photo_id   :: Int
+    , user'login      :: Text
+    , user'password   :: Text
+    , user'created_at :: Day
+    , user'is_admin   :: Bool
     } deriving (Show)
 
 data Author = Author
@@ -36,17 +31,15 @@ data Tag = Tag
     } deriving (Show)
 
 data Article = Article
-    { article'id               :: Int
-    , article'title            :: Text
-    , article'creation_date    :: Day
-    , article'author           :: Author
-    , article'category_id      :: Int
-    , article'tags             :: [Tag]
-    , article'text             :: Text
-    , article'main_photo       :: Photo
-    , article'secondary_photos :: [Photo]
-    , article'comments         :: [Comment]
-    , article'templates        :: [Template]
+    { article'id            :: Int
+    , article'title         :: Text
+    , article'published_at  :: Day
+    , article'author_id     :: Int
+    , article'category_id   :: Int
+    -- , article'tag_ids           :: [Int]
+    , article'text          :: Text
+    , article'main_photo_id :: Int
+    -- , article'content_photo_ids :: [Int]
     } deriving (Show)
 
 data Comment = Comment
@@ -56,15 +49,37 @@ data Comment = Comment
     , comment'text       :: Text
     } deriving (Show)
 
--- type Template = Article
 data Template = Template
-    { template'title            :: Text
-    , template'creation_date    :: Day
-    , template'author           :: Author
-    , template'category         :: Category
-    , template'tags             :: [Tag]
-    , template'text             :: Text
-    , template'main_photo       :: Photo
-    , template'secondary_photos :: [Photo]
-    , template'comments         :: [Comment]
+    { template'id            :: Int
+    , template'article_id    :: Maybe Int
+    , template'title         :: Text
+    , template'created_at    :: Day
+    , template'author_id     :: Int
+    , template'category_id   :: Int
+    , template'text          :: Text
+    , template'main_photo_id :: Int
+    -- , template'tag_ids :: [Int]
+    -- , template'content_photo_ids :: [Int]
     } deriving (Show)
+
+data Token = Token
+    { token'user_id :: Int
+    , token'token   :: Text
+    } deriving (Show)
+
+data Photo = Photo
+    { photo'id   :: Int
+    , photo'link :: Text
+    } deriving (Show)
+
+-- data Template = Template
+--     { template'title            :: Text
+--     , template'creation_date    :: Day
+--     , template'author           :: Author
+--     , template'category         :: Category
+--     , template'tags             :: [Tag]
+--     , template'text             :: Text
+--     , template'main_photo       :: Photo
+--     , template'secondary_photos :: [Photo]
+--     , template'comments         :: [Comment]
+--     } deriving (Show)
